@@ -1,9 +1,9 @@
 package cl.evaluation.exercise.services;
 
-import org.springframework.http.ResponseEntity;
 import cl.evaluation.exercise.controllers.request.CreateUserDTO;
+import cl.evaluation.exercise.models.UserEntity;
 
 public interface UserService {
 
-  public ResponseEntity<?> createUser(CreateUserDTO createUserDT);
+  public UserEntity createUser(CreateUserDTO createUserDTO);
 }

@@ -1,22 +1,36 @@
 package cl.evaluation.exercise.utils;
 
 import java.util.regex.Pattern;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
+@Component
 public class ValidationUtil {
 
-  private static final String REGEX_EMAIL = "^\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*(\\.\\w{2,3})+$";
-  private static final String REGEX_EMAIL_LETTERS = "^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$";
-  private static final String REGEX_PASSWORD = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d.*\\d)[A-Za-z\\d]*$";
+
+  private static String regexEmail;
+  private static String regexPassword;
+
+  @Value("${regex.validations.email}")
+  public void setRegexEmail(String regex) {
+    regexEmail = regex;
+  }
+
+  @Value("${regex.validations.password}")
+  public void setRegexPassword(String regex) {
+    regexPassword = regex;
+  }
+
 
   public static Boolean validateEmail(String email) {
 
-    Pattern pattern = Pattern.compile(REGEX_EMAIL);
+    Pattern pattern = Pattern.compile(regexEmail);
     return email != null && pattern.matcher(email).matches();
   }
 
   public static Boolean validatePassword(String password) {
 
-    Pattern pattern = Pattern.compile(REGEX_PASSWORD);
+    Pattern pattern = Pattern.compile(regexPassword);
     return password != null && pattern.matcher(password).matches();
   }
 }

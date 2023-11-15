@@ -8,23 +8,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import cl.evaluation.exercise.controllers.request.CreateUserDTO;
 import cl.evaluation.exercise.repositories.UserRepository;
-import cl.evaluation.exercise.services.UserService;
+import cl.evaluation.exercise.utils.UserUtil;
 
 @SpringBootTest
-public class UserServiceTest {
-
+public class UserUtilTest {
 
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
-  private UserService userService;
+  private UserUtil userUtil;
 
   @BeforeEach
   public void setup() {
     userRepository.deleteAll();
   }
-
 
   @Test
   void createUserPasswordFail() {
@@ -33,11 +31,12 @@ public class UserServiceTest {
         .email("aaa@ada.cl")
         .password("aaa1")
         .build();
-    ResponseEntity<?> response = userService.createUser(userCreate);
+    ResponseEntity<?> response = userUtil.createUser(userCreate);
 
     Assertions.assertEquals(response.getBody().toString(),
         "{mensaje=Contraseña inválida, debe contener: una mayuscula, letras minúsculas y dos numeros}");
     Assertions.assertEquals(response.getStatusCode().value(), 422);
+
   }
 
   @Test
@@ -47,7 +46,7 @@ public class UserServiceTest {
         .email("aaa@@ada.cl")
         .password("A2aaa1")
         .build();
-    ResponseEntity<?> response = userService.createUser(userCreate);
+    ResponseEntity<?> response = userUtil.createUser(userCreate);
 
     Assertions.assertEquals(response.getBody().toString(),
         "{mensaje=Correo inválido}");
@@ -61,12 +60,13 @@ public class UserServiceTest {
         .email("aaa@ada.cl")
         .password("A2aaa1")
         .build();
-    userService.createUser(userCreate);
-    ResponseEntity<?> response = userService.createUser(userCreate);
+    userUtil.createUser(userCreate);
+    ResponseEntity<?> response = userUtil.createUser(userCreate);
     Assertions.assertEquals(response.getBody().toString(), "{mensaje=El correo ya registrado}");
     Assertions.assertEquals(response.getStatusCode().value(), 422);
 
   }
+
 
   @Test
   void createUserSuccess() {
@@ -75,8 +75,11 @@ public class UserServiceTest {
         .email("aaa@ada.cl")
         .password("A2aaa1")
         .build();
-    ResponseEntity<?> response = userService.createUser(userCreate);
+    ResponseEntity<?> response = userUtil.createUser(userCreate);
     Assertions.assertEquals(response.getStatusCode().value(), 200);
 
   }
+
+
+
 }

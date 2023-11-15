@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import cl.evaluation.exercise.controllers.request.CreateUserDTO;
-import cl.evaluation.exercise.services.UserService;
+import cl.evaluation.exercise.utils.UserUtil;
 import jakarta.validation.Valid;
 
 
@@ -18,10 +18,10 @@ import jakarta.validation.Valid;
 public class MainController {
 
   @Autowired
-  private UserService userService;
+  private UserUtil userUtil;
 
   @GetMapping("/secure")
-  public ResponseEntity<Map<String, Object>> helloSecured() {
+  public ResponseEntity<Map<String, Object>> secured() {
     Map<String, Object> httpResponse = new HashMap<>();
     httpResponse.put("mensaje", "Endpoint seguro");
     return ResponseEntity.status(HttpStatus.OK).body(httpResponse);
@@ -29,7 +29,7 @@ public class MainController {
 
   @PostMapping("/createUser")
   public ResponseEntity<?> createUser(@Valid @RequestBody CreateUserDTO createUserDTO) {
-    return userService.createUser(createUserDTO);
+    return userUtil.createUser(createUserDTO);
   }
 
 }
