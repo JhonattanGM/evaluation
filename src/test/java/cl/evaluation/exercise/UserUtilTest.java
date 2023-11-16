@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.ResponseEntity;
 import cl.evaluation.exercise.controllers.request.CreateUserDTO;
@@ -12,6 +13,19 @@ import cl.evaluation.exercise.utils.UserUtil;
 
 @SpringBootTest
 public class UserUtilTest {
+
+  @Value("${msg.response.property}")
+  private String RESPONSE_PROPERTY;
+
+  @Value("${msg.validation.email.invalid}")
+  private String EMAIL_INVALID;
+
+  @Value("${msg.validation.email.registered}")
+  private String EMAIL_REGISTERED;
+
+  @Value("${msg.validation.password.invalid}")
+  private String PASSWORD_INVALID;
+
 
   @Autowired
   private UserRepository userRepository;
@@ -34,7 +48,7 @@ public class UserUtilTest {
     ResponseEntity<?> response = userUtil.createUser(userCreate);
 
     Assertions.assertEquals(response.getBody().toString(),
-        "{mensaje=Contraseña inválida, debe contener: una mayuscula, letras minúsculas y dos numeros}");
+        "{" + RESPONSE_PROPERTY + "=" + PASSWORD_INVALID + "}");
     Assertions.assertEquals(response.getStatusCode().value(), 422);
 
   }
@@ -49,7 +63,7 @@ public class UserUtilTest {
     ResponseEntity<?> response = userUtil.createUser(userCreate);
 
     Assertions.assertEquals(response.getBody().toString(),
-        "{mensaje=Correo inválido}");
+        "{" + RESPONSE_PROPERTY + "=" + EMAIL_INVALID + "}");
     Assertions.assertEquals(response.getStatusCode().value(), 422);
   }
 
@@ -62,7 +76,9 @@ public class UserUtilTest {
         .build();
     userUtil.createUser(userCreate);
     ResponseEntity<?> response = userUtil.createUser(userCreate);
-    Assertions.assertEquals(response.getBody().toString(), "{mensaje=El correo ya registrado}");
+
+    Assertions.assertEquals(response.getBody().toString(),
+        "{" + RESPONSE_PROPERTY + "=" + EMAIL_REGISTERED + "}");
     Assertions.assertEquals(response.getStatusCode().value(), 422);
 
   }

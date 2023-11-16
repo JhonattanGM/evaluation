@@ -8,29 +8,29 @@ import org.springframework.stereotype.Component;
 public class ValidationUtil {
 
 
-  private static String regexEmail;
-  private static String regexPassword;
+  private static String REGEX_EMAIL;
+  private static String REGEX_PASSWORD;
 
   @Value("${regex.validations.email}")
   public void setRegexEmail(String regex) {
-    regexEmail = regex;
+    REGEX_EMAIL = regex;
   }
 
   @Value("${regex.validations.password}")
   public void setRegexPassword(String regex) {
-    regexPassword = regex;
+    REGEX_PASSWORD = regex;
   }
 
 
   public static Boolean validateEmail(String email) {
 
-    Pattern pattern = Pattern.compile(regexEmail);
+    Pattern pattern = Pattern.compile(REGEX_EMAIL);
     return email != null && pattern.matcher(email).matches();
   }
 
   public static Boolean validatePassword(String password) {
 
-    Pattern pattern = Pattern.compile(regexPassword);
+    Pattern pattern = Pattern.compile(REGEX_PASSWORD);
     return password != null && pattern.matcher(password).matches();
   }
 }

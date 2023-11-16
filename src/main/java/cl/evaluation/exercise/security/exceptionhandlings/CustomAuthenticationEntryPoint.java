@@ -3,6 +3,7 @@ package cl.evaluation.exercise.security.exceptionhandlings;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
@@ -16,6 +17,9 @@ import jakarta.servlet.http.HttpServletResponse;
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
+  @Value("${msg.response.property}")
+  private String RESPONSE_PROPERTY;
+
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
       AuthenticationException authException) throws IOException, ServletException {
@@ -27,7 +31,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
       status = 403;
       msg = authException.getMessage();
     }
-    extra.put("mensaje", msg);
+    extra.put(RESPONSE_PROPERTY, msg);
 
     response.getWriter().write(new ObjectMapper().writeValueAsString(extra));
     response.setStatus(status);
